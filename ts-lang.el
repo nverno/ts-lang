@@ -29,9 +29,8 @@
 
 (eval-when-compile (require 'cl-lib))
 
-(declare-function ts-lang--language-info "ts-lang-module")
 (declare-function ts-lang-load "ts-lang-module")
-
+(declare-function ts-lang--parser-info "ts-lang-module")
 
 (unless module-file-suffix
   (error "ts-lang requires module support (Emacs compiled with --with-modules)"))
@@ -53,6 +52,11 @@
 (unless (require 'ts-lang-module nil t)
   (ts-lang-compile (executable-find "cmake"))
   (require 'ts-lang-module))
+
+
+(cl-defstruct (ts-lang--info (:constructor ts-lang-make-info))
+  "Tree-sitter language info."
+  lang named anon fields)
 
 
 (defun ts-lang--read-parser (&optional directory)
@@ -81,10 +85,14 @@ Returns a list of lists, where the elements are:
 Theses are lists of strings containing the names of the grammar components."
   (interactive (list (ts-lang--read-parser) t))
   (let* ((lang (ts-lang-load lang))
-         (info (ts-lang--language-info lang)))
+         (info (ts-lang--parser-info lang)))
     (when interactive
       (message "%S" info))
-    info))
+    (ts-lang-make-info
+     :lang lang
+     :named (car info)
+     :anon (cadr info)
+     :fields (caddr info))))
 
   
 (provide 'ts-lang)
