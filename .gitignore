@@ -1,0 +1,6 @@
+*~
+*.elc
+*.so
+/build
+tmp.*
+*.tmp
