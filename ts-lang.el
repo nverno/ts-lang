@@ -29,9 +29,8 @@
 
 (eval-when-compile (require 'cl-lib))
 
-(declare-function ts-lang--language-info "ts-lang-module")
 (declare-function ts-lang-load "ts-lang-module")
-
+(declare-function ts-lang--parser-info "ts-lang-module")
 
 (unless module-file-suffix
   (error "ts-lang requires module support (Emacs compiled with --with-modules)"))
